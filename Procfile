@@ -1,1 +1,1 @@
-web: gunicorn mtaproject.wsgi --log-file -
+web: gunicorn mtaproject.mtaproject.wsgi --log-file -
