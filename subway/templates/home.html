@@ -33,11 +33,17 @@
                 // save user's location if browser supports geolocation
                 if(navigator.geolocation)
                     navigator.geolocation.getCurrentPosition(function(position) {
+
                         var user_lat = position.coords.latitude;
                         var user_lon = position.coords.longitude;
 
-                        // adds marker to map with user's location, and zooms in where that marker is
-                        var user_location_marker = L.marker([user_lat, user_lon]).addTo(subway_map);
+                        // adds circle to map with user's location, and zooms in where that marker is
+                        L.circle([user_lat, user_lon], {
+                            color: 'red',
+                            fillColor: '#f03',
+                            fillOpacity: 0.5,
+                            radius: 15
+                        }).addTo(subway_map);                        
                         subway_map.setView([user_lat, user_lon], 16);
 
                         var endpoint = "https://data.cityofnewyork.us/api/views/kk4q-3rt2/rows.json?";
@@ -55,17 +61,13 @@
                                     var subway_lat = parseFloat(subway_data[i][11].substring(26, 43));
                                     var subway_name = subway_data[i][10];
                                     if (nearby(subway_lat, user_lat) && nearby(subway_lon, user_lon)) {
-                                        L.marker([subway_lat, subway_lon]).addTo(subway_map); 
                                         nearby_stations[i] = [subway_name, subway_data[i][12]];
-                                        console.log(nearby_stations[i][0], nearby_stations[i][1]);
+                                        L.marker([subway_lat, subway_lon]).addTo(subway_map).bindPopup("<b>" + nearby_stations[i][0] + "</b>" + "<br>" + nearby_stations[i][1]).openPopup(); 
                                     }
                                 }
-
-                                // add list of stations to html
-                                for (i=0; i < nearby_stations.length; i++) {
-                                    document.getElementById("stations_list").innerHTML = nearby_stations.join(" ");
-                                }
-
+    
+                                document.getElementById("stations_list").innerHTML = "Click on each marker to see which station it marks and which trains run there.";
+    
                             },
                             error: function(error_data) {
                                 console.log(error_data)
@@ -81,12 +83,11 @@
 	
 
 	<div id='main' style="overflow: hidden;">
-			<div id="mapid" style='height:800px; width: 70%; float: left;'></div>
+			<div id="mapid" style='height:900px; width: 70%; float: left;'></div>
         <div id='subway_information' style='float: left; width: 400px; padding: 20px; text-align: center'>
-            <h4>Click below to submit your location.</h4>
-            <button id="location-button">Submit Location</button>
-            <div id="output"></div>
-            <h3>Station Information</h3>
+            <h4>Click below to submit your location.</h4><br>
+            <button id="location-button">Submit Location</button><br>
+            <div id="output"></div><br><br>
             <p id="stations_list"></p>
         </div>
 	</div>
