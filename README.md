@@ -1,7 +1,7 @@
 
 https://nearbysubwaystations.herokuapp.com/
 
-A Django web application that allows users to find nearby subway stations given their geolocation, and lists which trains stop at those stations.
+A Django web application that allows a user to find nearby subway stations given their geolocation, and lists which trains stop at those stations.
 
 
 
