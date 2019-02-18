@@ -11,85 +11,90 @@
    		crossorigin=""></script>
 	</head>
 	<body>
-	<script>
+    	<script>
 
-		//jquery block
-		$(document).ready(function(){
+    		//jquery block
+    		$(document).ready(function(){
 
-			var subway_map = L.map('mapid').setView([40.76, -73.98], 13);
-			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-			    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-			    maxZoom: 18,
-			    id: 'mapbox.light',
-			    accessToken: 'pk.eyJ1IjoiaXNhYmVsbGFiMyIsImEiOiJjanF6cDhtbzkwNWZsNGFveG5peXlveW5qIn0.cuWtbkoJwBfsoYRfKsnGcQ'
-			}).addTo(subway_map);
+    			var subway_map = L.map('mapid').setView([40.76, -73.98], 13);
+    			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    			    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    			    maxZoom: 18,
+    			    id: 'mapbox.light',
+    			    accessToken: 'pk.eyJ1IjoiaXNhYmVsbGFiMyIsImEiOiJjanF6cDhtbzkwNWZsNGFveG5peXlveW5qIn0.cuWtbkoJwBfsoYRfKsnGcQ'
+    			}).addTo(subway_map);
 
-            // determines if a subway station is near a user or not based on user's and stations's coordinates
-            function nearby(position, lat_or_lon) {
-                return ((Math.abs(position - lat_or_lon)) < 0.008);
-            }        
+                // determines if a subway station is near a user or not based on user's and stations's coordinates
+                function nearby(position, lat_or_lon) {
+                    return ((Math.abs(position - lat_or_lon)) < 0.008);
+                }        
 
-            $('#location-button').click(function() {
-                // save user's location if browser supports geolocation
-                if(navigator.geolocation)
-                    navigator.geolocation.getCurrentPosition(function(position) {
+                $('#location-button').click(function() {
+                    // save user's location if browser supports geolocation
+                    if(navigator.geolocation)
+                        navigator.geolocation.getCurrentPosition(function(position) {
 
-                        var user_lat = position.coords.latitude;
-                        var user_lon = position.coords.longitude;
+                            var user_lat = position.coords.latitude;
+                            var user_lon = position.coords.longitude;
 
-                        // adds circle to map with user's location, and zooms in where that marker is
-                        L.circle([user_lat, user_lon], {
-                            color: 'red',
-                            fillColor: '#f03',
-                            fillOpacity: 0.5,
-                            radius: 15
-                        }).addTo(subway_map);                        
-                        subway_map.setView([user_lat, user_lon], 16);
+                            // adds circle to map with user's location, and zooms in where that marker is
+                            L.circle([user_lat, user_lon], {
+                                color: 'red',
+                                fillColor: '#f03',
+                                fillOpacity: 0.5,
+                                radius: 15
+                            }).addTo(subway_map);                        
+                            subway_map.setView([user_lat, user_lon], 16);
 
-                        var endpoint = "https://data.cityofnewyork.us/api/views/kk4q-3rt2/rows.json?";
-                        var subway_data = [];
-                        var nearby_stations = [];
-                        console.log(user_lat, user_lon)
-                        $.ajax({
-                            method: "GET",
-                            url: endpoint,
-                            success: function(data) {
-                                subway_data = data.data;
-                                var number_of_stations = subway_data.length;
-                                for (i=0; i < number_of_stations; i++) {
-                                    var subway_lon = parseFloat(subway_data[i][11].substring(7, 25));
-                                    var subway_lat = parseFloat(subway_data[i][11].substring(26, 43));
-                                    var subway_name = subway_data[i][10];
-                                    if (nearby(subway_lat, user_lat) && nearby(subway_lon, user_lon)) {
-                                        nearby_stations[i] = [subway_name, subway_data[i][12]];
-                                        L.marker([subway_lat, subway_lon]).addTo(subway_map).bindPopup("<b>" + nearby_stations[i][0] + "</b>" + "<br>" + nearby_stations[i][1]).openPopup(); 
+                            var endpoint = "https://data.cityofnewyork.us/api/views/kk4q-3rt2/rows.json?";
+                            var subway_data = [];          
+                            var nearby_stations = []; 
+                            console.log(user_lat, user_lon)
+                            $.ajax({
+                                method: "GET",
+                                url: endpoint,
+                                success: function(data) {
+                                    subway_data = data.data;
+                                    var number_of_stations = subway_data.length;
+
+                                    // finds nearby stations, adds them to map and to nearby_stations array
+                                    for (i=0; i < number_of_stations; i++) { 
+                                        var subway_lon = parseFloat(subway_data[i][11].substring(7, 25));
+                                        var subway_lat = parseFloat(subway_data[i][11].substring(26, 43));
+                                        var subway_name = subway_data[i][10];
+                                        if (nearby(subway_lat, user_lat) && nearby(subway_lon, user_lon)) {
+                                            nearby_stations[i] = [subway_name, subway_data[i][12]];
+                                            L.marker([subway_lat, subway_lon]).addTo(subway_map).bindPopup("<b>" + nearby_stations[i][0] + "</b>" + "<br>" + nearby_stations[i][1]).openPopup(); 
+                                        }
                                     }
-                                }
-    
-                                document.getElementById("stations_list").innerHTML = "Click on each marker to see which station it marks and which trains run there.";
-    
-                            },
-                            error: function(error_data) {
-                                console.log(error_data)
-                            },
-                        });     
-    
-                    });
-                else
-                    console.log("geolocation not supported!!!");
-            }); //end location button
-		}); // end jquery
-	</script>
+        
+                                    document.getElementById("stations_list").innerHTML = "Click on each marker to see which station it marks and which trains run there.";
+        
+                                },
+                                error: function(error_data) {
+                                    console.log(error_data)
+                                },
+                            });     
+        
+                        });
+                    else
+                        console.log("geolocation not supported!!!");
+                }); //end location button
+    		}); // end jquery
+    	</script>
 	
 
-	<div id='main' style="overflow: hidden;">
-			<div id="mapid" style='height:900px; width: 70%; float: left;'></div>
-        <div id='subway_information' style='float: left; width: 400px; padding: 20px; text-align: center'>
-            <h4>Click below to submit your location.</h4><br>
-            <button id="location-button">Submit Location</button><br>
-            <div id="output"></div><br><br>
-            <p id="stations_list"></p>
+        <div id='main' style="overflow: hidden; text-align: center">
+                <div id='subway_information' style='display: inline-block; padding: 40px'>
+                    <h4>Click below to find nearby stations:</h4><br>
+                    <button id="location-button">Submit Location</button><br>
+                    <div id="output"></div><br><br>
+                    <p id="stations_list"></p>
+                    <div id="mapid" style='height:700px; width: 1000px; padding: 50px'></div>
+                </div>
+                
         </div>
-	</div>
+    </body>
 
 </html>
+
