@@ -124,5 +124,5 @@ STATIC_URL = '/static/'
 # Geolocation retrieval requires url to start with https://, so force redirect
 # Turn off when running locally
 
-#SECURE_SSL_REDIRECT = True
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
