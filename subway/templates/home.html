@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html>
-	<head>
+    <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-   		integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-   		crossorigin=""/>
-		 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-   		integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-   		crossorigin=""></script>
-	</head>
-	<body>
-    	<script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin=""/>
+         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+        integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+    </head>
+    <body>
+        <script>
 
-    		$(document).ready(function(){
-
-    			var subway_map = L.map('mapid').setView([40.76, -73.98], 13);
-    			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    			    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    			    maxZoom: 18,
-    			    id: 'mapbox.light',
-    			    accessToken: 'pk.eyJ1IjoiaXNhYmVsbGFiMyIsImEiOiJjanF6cDhtbzkwNWZsNGFveG5peXlveW5qIn0.cuWtbkoJwBfsoYRfKsnGcQ'
-    			}).addTo(subway_map);
+            $(document).ready(function(){
+                var subway_map = L.map('mapid').setView([40.76, -73.98], 13);
+                L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.light',
+                    accessToken: 'pk.eyJ1IjoiaXNhYmVsbGFiMyIsImEiOiJjanF6cDhtbzkwNWZsNGFveG5peXlveW5qIn0.cuWtbkoJwBfsoYRfKsnGcQ'
+                }).addTo(subway_map);
 
                 // determines if a subway station is near a user or not based on user's and stations's coordinates
                 function nearby(position, lat_or_lon) {
@@ -58,10 +57,10 @@
                                     for (i=0; i < number_of_stations; i++) { 
                                         var subway_lon = parseFloat(subway_data[i][11].substring(7, 25));
                                         var subway_lat = parseFloat(subway_data[i][11].substring(26, 43));
-                                        var subway_name = subway_data[i][10];
-                                        var subway_lines = subway_data[i][12];
 
                                         if (nearby(subway_lat, user_lat) && nearby(subway_lon, user_lon)) {
+                                            var subway_name = subway_data[i][10];
+                                            var subway_lines = subway_data[i][12];                                            
                                             L.marker([subway_lat, subway_lon]).addTo(subway_map).bindPopup("<b>" + subway_name + "</b>" + "<br>" + subway_lines).openPopup(); 
                                         }
                                     }
@@ -78,9 +77,9 @@
                     else
                         console.log("geolocation not supported!!!");
                 }); //end location button
-    		});
-    	</script>
-	
+            });
+        </script>
+    
 
         <div id='main' style="overflow: hidden; text-align: center">
                 <div id='subway_information' style='display: inline-block; padding: 40px'>
