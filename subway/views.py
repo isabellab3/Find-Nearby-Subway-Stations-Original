@@ -2,10 +2,10 @@ from django.shortcuts import render
 import requests
 
 def Home(request):
-    # url = 'https://data.cityofnewyork.us/api/views/kk4q-3rt2/rows.json'
-    # request = requests.get(url).json()
+    url = 'https://data.cityofnewyork.us/api/views/kk4q-3rt2/rows.json'
+    request = requests.get(url).json()
 
-    # subway_data = []
+    subway_data = []
 
     # for x in range(0, len(request['data'])):
     #     station_info = {
