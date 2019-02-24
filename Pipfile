@@ -7,11 +7,9 @@ verify_ssl = true
 
 [packages]
 django = "*"
+requests = "*"
 gunicorn = "*"
 whitenoise = "*"
-requests = "*"
 
 [requires]
 python_version = "3.7"
-
-
