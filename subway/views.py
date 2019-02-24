@@ -19,4 +19,4 @@ def Home(request):
 
     context = {'subway_data' : subway_data}
 
-    return render(request, 'home.html', context)
+    return render(request, 'home.html')
