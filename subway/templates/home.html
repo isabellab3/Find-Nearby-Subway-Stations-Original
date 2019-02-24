@@ -12,7 +12,6 @@
     </head>
     <body>
         <script>
-
             $(document).ready(function(){
                 var subway_map = L.map('mapid').setView([40.76, -73.98], 13);
                 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -43,43 +42,30 @@
                                 radius: 15
                             }).addTo(subway_map);                        
                             subway_map.setView([user_lat, user_lon], 16);
+                            
+                            var number_of_stations = parseInt("{{ subway_data | length | safe }}");
 
-                            var subway_data = [];          
+                            {% for station_info in subway_data %}
+                                subway_lat = parseFloat("{{ station_info.latitude | safe }}");
+                                subway_lon = parseFloat("{{ station_info.longitude | safe }}");
 
-                            $.ajax({
-                                method: "GET",
-                                url: "https://data.cityofnewyork.us/api/views/kk4q-3rt2/rows.json?",
-                                success: function(data) {
-                                    subway_data = data.data;
-                                    var number_of_stations = subway_data.length;
+                                if (nearby(subway_lat, user_lat) && nearby(subway_lon, user_lon)) {        
+                                    L.marker([subway_lat, subway_lon])
+                                        .addTo(subway_map)
+                                        .bindPopup("<b><h5>" + "{{ station_info.name | safe }}" + "</b>" + "<br>" + "{{ station_info.lines | safe }}" + "<br></h5><i>" + "{{ station_info.notes | safe }}" + "</i>")
+                                        .openPopup(); 
+                                }
 
-                                    // finds nearby stations, adds them to map
-                                    for (i=0; i < number_of_stations; i++) { 
-                                        var subway_lon = parseFloat(subway_data[i][11].substring(7, 25));
-                                        var subway_lat = parseFloat(subway_data[i][11].substring(26, 43));
+                            {% endfor %}
 
-                                        if (nearby(subway_lat, user_lat) && nearby(subway_lon, user_lon)) {
-                                            var subway_name = subway_data[i][10];
-                                            var subway_lines = subway_data[i][12];                                            
-                                            L.marker([subway_lat, subway_lon]).addTo(subway_map).bindPopup("<b>" + subway_name + "</b>" + "<br>" + subway_lines).openPopup(); 
-                                        }
-                                    }
-        
-                                    document.getElementById("info").innerHTML = "Click on each marker to see which station it marks and which trains run there.";
-        
-                                },
-                                error: function(error_data) {
-                                    console.log(error_data)
-                                },
-                            });     
-        
+                            document.getElementById("info").innerHTML = "Click on each marker to see which station it marks and which trains run there.";
                         });
                     else
                         console.log("geolocation not supported!!!");
-                }); //end location button
+                }); // end location button
             });
         </script>
-    
+
 
         <div id='main' style="overflow: hidden; text-align: center">
                 <div id='subway_information' style='display: inline-block; padding: 40px'>
