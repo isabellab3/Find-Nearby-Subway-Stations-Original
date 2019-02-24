@@ -3,7 +3,7 @@ import requests
 
 def Home(request):
     url = 'https://data.cityofnewyork.us/api/views/kk4q-3rt2/rows.json'
-    #request = requests.get(url).json()
+    request = requests.get(url)
 
     subway_data = []
 
