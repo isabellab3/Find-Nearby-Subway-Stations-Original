@@ -7,7 +7,7 @@ def Home(request):
 
     subway_data = []
 
-    for x in range(0, len(request['data'])):
+    for x in range(0, len(r['data'])):
         station_info = {
             'name' :      r['data'][x][10],
             'latitude' :  r['data'][x][11][26:43],
