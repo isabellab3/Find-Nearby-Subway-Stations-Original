@@ -9,18 +9,18 @@ A Django web application that allows a user to find nearby subway stations given
 
 Requirements:
 
-Python >= 3.7, Django >= 2.1.7
+Python >= 3.7, Django >= 2.1.7, Requests >= 2.21.0
 
 
 ###### Navigate to the project folder. Then create a virtual environment and activate it:
 
 $ pip install pipenv
-
 $ pipenv shell
 
-###### Install Django:
+###### Install Django and Requests:
 
 $ pip install django==2.1.7
+$ pip install requests
 
 ###### Run the server:
 
