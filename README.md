@@ -1,5 +1,5 @@
 
-**_I remade this project with new features. View it here:_**
+**_I have remade this project with some new features. View it here:_**
 
 
 https://github.com/isabellaberekdar/Find-Nearby-Subway-Stations
